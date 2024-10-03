@@ -5,6 +5,7 @@ import org.json.simple.parser.JSONParser;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class WeatherAPIData {
@@ -22,7 +23,7 @@ public class WeatherAPIData {
 
                 // Получение данных о локации
                 JSONObject cityLocationData = getLocationData(city);
-                double latitude = (double) cityLocationData.get("latitude");
+                double latitude = (double) Objects.requireNonNull(cityLocationData).get("latitude");
                 double longitude = (double) cityLocationData.get("longitude");
 
                 displayWeatherData(latitude, longitude);
@@ -44,7 +45,7 @@ public class WeatherAPIData {
             HttpURLConnection apiConnection = fetchApiResponse(urlString);
 
             // проверка статуса ответа
-            if(apiConnection.getResponseCode() != 200){
+            if(Objects.requireNonNull(apiConnection).getResponseCode() != 200){
                 System.out.println("Ошибка: невозможно присоединиться к API");
                 return null;
             }
@@ -74,7 +75,7 @@ public class WeatherAPIData {
             HttpURLConnection apiConnection = fetchApiResponse(url);
 
             // проверка статуса ответа
-            if(apiConnection.getResponseCode() != 200){
+            if(Objects.requireNonNull(apiConnection).getResponseCode() != 200){
                 System.out.println("Ошибка: невозможно присоединиться к API");
                 return;
             }
@@ -88,9 +89,6 @@ public class WeatherAPIData {
             JSONObject currentWeatherJson = (JSONObject) jsonObject.get("current");
 
             // 4.Сохраняем данные в соответствующем им типе данных
-            String time = (String) currentWeatherJson.get("time");
-            System.out.println("Время: " + time);
-
             double temperature = (double) currentWeatherJson.get("temperature_2m");
             System.out.println("Температура (C): " + temperature);
 
